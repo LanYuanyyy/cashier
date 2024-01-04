@@ -1,4 +1,4 @@
-#  Cashier
+# Cashier
 
 This template should help get you started developing with Vue 3 in Vite.
 
@@ -26,4 +26,14 @@ npm run dev
 
 ```sh
 npm run build
+```
+
+### Element 主题色定制
+
+```sh
+yarn add scss
+
+准备定制化的样式文件
+
+修改覆盖 elementPlus 默认样式
 ```
