@@ -1,29 +1,13 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import Axios from './utils/axios'
 const testingUser = async function () {
   const res = await Axios.get(`cashier/user/recommend/phone?phone=18705204931`)
   console.log(res)
 }
-testingUser()
 </script>
 
 <template>
-  <header>
-    <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
-    <el-button type="primary">Primary</el-button>
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <router-view></router-view>
 </template>
 
 <style scoped>
