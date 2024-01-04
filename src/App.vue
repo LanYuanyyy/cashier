@@ -1,6 +1,12 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import Axios from './utils/axios'
+const testingUser = async function () {
+  const res = await Axios.get(`cashier/user/recommend/phone?phone=18705204931`)
+  console.log(res)
+}
+testingUser()
 </script>
 
 <template>
