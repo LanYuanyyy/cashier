@@ -1,9 +1,5 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-const testingUser = async function () {
-  const res = await Axios.get(`cashier/user/recommend/phone?phone=18705204931`)
-  console.log(res)
-}
 </script>
 
 <template>
