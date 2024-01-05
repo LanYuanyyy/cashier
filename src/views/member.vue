@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import Axios from '../utils/axios.js'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 const name = ref('')
 const phone = ref('')
 const total = ref(0)
@@ -10,10 +10,27 @@ const user_vip = ref({})
 const getMemberList = async (page = 1) => {
   const res = await Axios.get(`cashier/user_vip?limit=10&page=${page}&name=${name.value}&phone=${phone.value}`)
   if (res.code === 200) {
-    console.log(res)
     tableData.value = res.data.list
     total.value = res.data.meta.total
     user_vip.value = tableData.value[0]
+  }
+}
+const renewApi = async (id, value) => {
+  const res = await Axios.post(`cashier/user_vip/renew/${id}`, { year: value })
+  if (res.code === 200) {
+    ElMessage({ type: 'success', message: `成功续费:${value}年` })
+  } else {
+    // danger
+    ElMessage({ type: 'danger', message: res.msg })
+
+  }
+}
+const modifyPhoneApi = async (id, value) => {
+  const res = await Axios.post(`cashier/user/change/phone/${id}`, { phone: value })
+  if (res.code === 200) {
+    ElMessage({ type: 'success', message: '修改成功' })
+  } else {
+    ElMessage({ type: 'danger', message: res.msg })
   }
 }
 const rowClick = (row, column, event) => {
@@ -21,6 +38,27 @@ const rowClick = (row, column, event) => {
 }
 const handleSizeChange = (val) => {
   getMemberList(val)
+}
+const detailUser = (id) => {
+  console.log(id)
+}
+const renew = (id) => {
+  ElMessageBox.prompt('请输入续费时间 (年)', '会员续费', {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',
+  })
+    .then(({ value }) => { renewApi(id, value) })
+    .catch(() => { ElMessage({ type: 'info', message: '取消续费' }) })
+}
+const modifyPhone = (id) => {
+  ElMessageBox.prompt('请输入新的手机号码', '会员续费', {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',
+    inputPattern: /^1[3456789]\d{9}$/,
+    inputErrorMessage: 'Invalid Phone'
+  })
+    .then(({ value }) => { modifyPhoneApi(id, value) })
+    .catch(() => { ElMessage({ type: 'info', message: '取消修改' }) })
 }
 onMounted(() => {
   getMemberList()
@@ -38,10 +76,19 @@ onMounted(() => {
     <el-descriptions-item label="押金" v-if="user_vip.vip">{{user_vip.vip.deposit}}</el-descriptions-item>
   </el-descriptions>
   <el-table :data="tableData" stripe style="width: 100%" @row-click="rowClick" highlight-current-row>
-    <el-table-column prop="created_at" label="Date 时间" />
-    <el-table-column prop="name" label="Name 用户名" />
-    <el-table-column prop="phone" label="phone 手机号" />
-    <el-table-column prop="vip.deposit" label="押金" />
+    <el-table-column type="index" label="序号" width='80' align='center' />
+    <el-table-column prop="created_at" label="Date 时间" width='200' />
+    <el-table-column prop="name" label="Name 用户名" width='200' />
+    <el-table-column prop="phone" label="phone 手机号" width='200' />
+    <el-table-column prop="vip.deposit" label="押金" width='200' />
+    <el-table-column prop="hire_count" label="订单数" />
+    <el-table-column fixed="right" label="Operations" width='250'>
+      <template #default='{row}'>
+        <el-button link type="primary" size="small" @click="renew(row.id)">续费</el-button>
+        <el-button link type="info" size="small" @click="modifyPhone(row.id)">修改手机号</el-button>
+        <el-button link type="danger" size="small" @click="detailUser(row.id)">Detail</el-button>
+      </template>
+    </el-table-column>
   </el-table>
   <el-pagination layout="prev, pager, next" :total="total" @change="handleSizeChange" />
 </template>
