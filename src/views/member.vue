@@ -1,14 +1,22 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import Axios from '../utils/axios.js'
 import { ElMessage, ElMessageBox } from 'element-plus'
-const name = ref('')
-const phone = ref('')
 const total = ref(0)
 const tableData = ref([])
 const user_vip = ref({})
+const formInline = reactive({
+  name: '',
+  phone: '',
+})
+const onSubmit = () => { getMemberList() }
+const cleanUp = () => {
+  formInline.name = ''
+  formInline.phone = ''
+  getMemberList()
+}
 const getMemberList = async (page = 1) => {
-  const res = await Axios.get(`cashier/user_vip?limit=10&page=${page}&name=${name.value}&phone=${phone.value}`)
+  const res = await Axios.get(`cashier/user_vip?limit=15&page=${page}&name=${formInline.name}&phone=${formInline.phone}`)
   if (res.code === 200) {
     tableData.value = res.data.list
     total.value = res.data.meta.total
@@ -60,13 +68,11 @@ const modifyPhone = (id) => {
     .then(({ value }) => { modifyPhoneApi(id, value) })
     .catch(() => { ElMessage({ type: 'info', message: '取消修改' }) })
 }
-onMounted(() => {
-  getMemberList()
-})
+onMounted(() => { getMemberList() })
 </script>
 
 <template>
-  <el-descriptions title="User Info">
+  <el-descriptions title="User Info" v-if="user_vip">
     <el-descriptions-item label="Username">{{user_vip.name}}</el-descriptions-item>
     <el-descriptions-item label="Telephone">{{user_vip.phone}}</el-descriptions-item>
     <el-descriptions-item label="Date 时间">{{user_vip.created_at}}</el-descriptions-item>
@@ -75,6 +81,18 @@ onMounted(() => {
     </el-descriptions-item>
     <el-descriptions-item label="押金" v-if="user_vip.vip">{{user_vip.vip.deposit}}</el-descriptions-item>
   </el-descriptions>
+  <el-form :inline="true" :model="formInline" class="demo-form-inline">
+    <el-form-item label="会员名-查询">
+      <el-input v-model="formInline.name" placeholder="name" clearable />
+    </el-form-item>
+    <el-form-item label="手机号-查询">
+      <el-input v-model="formInline.phone" placeholder="phone" clearable />
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="onSubmit">Query</el-button>
+      <el-button type="danger" @click="cleanUp">清除</el-button>
+    </el-form-item>
+  </el-form>
   <el-table :data="tableData" stripe style="width: 100%" @row-click="rowClick" highlight-current-row>
     <el-table-column type="index" label="序号" width='80' align='center' />
     <el-table-column prop="created_at" label="Date 时间" width='200' />
@@ -92,3 +110,11 @@ onMounted(() => {
   </el-table>
   <el-pagination layout="prev, pager, next" :total="total" @change="handleSizeChange" />
 </template>
+
+
+<style lang="scss" scoped>
+.el-form {
+  display: flex;
+  justify-content: flex-end;
+}
+</style>
