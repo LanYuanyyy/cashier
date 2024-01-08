@@ -2,7 +2,7 @@
 import { ref, reactive } from 'vue'
 import Axios from '../../utils/axios'
 import { ElMessage, ElMessageBox } from 'element-plus'
-const dialogVisible = ref(true)
+const dialogVisible = ref(false)
 const formAdduser = reactive({ name: '', phone: '', pay_type: '', deposit: '', start_time: '', end_time: '' })
 const dateTime = ref([])
 const open = () => {
