@@ -1,12 +1,17 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import Axios from '@/utils/axios'
+import { ElMessage } from 'element-plus'
 
 export const useCounterStore = defineStore('counter', () => {
-  const count = ref(0)
-  const doubleCount = computed(() => count.value * 2)
-  function increment() {
-    count.value++
+  const memberListApi = async (page = 1, formInline = {}) => {
+    const res = await Axios.get(`cashier/user_vip?limit=15&page=${page}&name=${formInline.name}&phone=${formInline.phone}`)
+    if (res.code === 200) {
+      return res.data
+    } else {
+      ElMessage({ type: 'danger', message: res.message })
+    }
   }
 
-  return { count, doubleCount, increment }
+  return { memberListApi }
 })

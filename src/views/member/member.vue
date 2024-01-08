@@ -3,9 +3,11 @@ import { ref, onMounted, reactive } from 'vue'
 import Axios from '../../utils/axios.js'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import AddMember from './AddMember.vue'
+import { useCounterStore } from '../../stores/counter'
 const total = ref(0)
 const tableData = ref([])
 const user_vip = ref({})
+const memberData = ref({})
 const addUserMemberRef = ref(null)
 const formInline = reactive({ name: '', phone: '' })
 const onSubmit = () => {
@@ -79,6 +81,7 @@ const modifyPhone = (id) => {
       ElMessage({ type: 'info', message: '取消修改' })
     })
 }
+
 onMounted(() => {
   getMemberList()
 })
@@ -95,9 +98,7 @@ onMounted(() => {
     <el-descriptions-item label="押金" v-if="user_vip.vip">{{ user_vip.vip.deposit }}</el-descriptions-item>
   </el-descriptions>
   <el-form :inline="true" :model="formInline" class="demo-form-inline">
-    <el-button type="success" @click="addUserMember" style="margin-right: 20px"
-      >新增会员 <el-icon><Plus /></el-icon
-    ></el-button>
+    <el-button type="success" @click="addUserMember" style="margin-right: 20px">新增会员 +</el-button>
     <el-form-item label="会员名-查询">
       <el-input v-model="formInline.name" placeholder="name" clearable />
     </el-form-item>
