@@ -3,13 +3,14 @@ import { ref, onMounted, reactive } from 'vue'
 import Axios from '../../utils/axios.js'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import AddMember from './AddMember.vue'
-import { useCounterStore } from '../../stores/counter'
+import { useCounterStore } from '@/stores/counter'
 const total = ref(0)
 const tableData = ref([])
 const user_vip = ref({})
 const memberData = ref({})
 const addUserMemberRef = ref(null)
 const formInline = reactive({ name: '', phone: '' })
+const memberStore = useCounterStore()
 const onSubmit = () => {
   getMemberList()
 }
@@ -22,13 +23,21 @@ const addUserMember = () => {
   addUserMemberRef.value.open()
 }
 const getMemberList = async (page = 1) => {
-  const res = await Axios.get(`cashier/user_vip?limit=15&page=${page}&name=${formInline.name}&phone=${formInline.phone}`)
-  if (res.code === 200) {
-    tableData.value = res.data.list
-    total.value = res.data.meta.total
+  const res = await memberStore.memberListApi(page, formInline)
+  if (res) {
+    tableData.value = memberStore.memberData.list
+    total.value = memberStore.memberData.meta.total
     user_vip.value = tableData.value[0]
   }
 }
+// const getMemberList = async (page = 1) => {
+//   const res = await Axios.get(`cashier/user_vip?limit=15&page=${page}&name=${formInline.name}&phone=${formInline.phone}`)
+//   if (res.code === 200) {
+//     tableData.value = res.data.list
+//     total.value = res.data.meta.total
+//     user_vip.value = tableData.value[0]
+//   }
+// }
 const renewApi = async (id, value) => {
   const res = await Axios.post(`cashier/user_vip/renew/${id}`, { year: value })
   if (res.code === 200) {
