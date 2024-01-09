@@ -30,14 +30,6 @@ const getMemberList = async (page = 1) => {
     user_vip.value = tableData.value[0]
   }
 }
-// const getMemberList = async (page = 1) => {
-//   const res = await Axios.get(`cashier/user_vip?limit=15&page=${page}&name=${formInline.name}&phone=${formInline.phone}`)
-//   if (res.code === 200) {
-//     tableData.value = res.data.list
-//     total.value = res.data.meta.total
-//     user_vip.value = tableData.value[0]
-//   }
-// }
 const renewApi = async (id, value) => {
   const res = await Axios.post(`cashier/user_vip/renew/${id}`, { year: value })
   if (res.code === 200) {
@@ -61,7 +53,7 @@ const rowClick = (row, column, event) => {
 const handleSizeChange = (val) => {
   getMemberList(val)
 }
-const detailUser = (id) => {
+const deleteUser = (id) => {
   console.log(id)
 }
 const renew = (id) => {
@@ -131,11 +123,11 @@ onMounted(() => {
       <template #default="{ row }">
         <el-button link type="primary" size="small" @click="renew(row.id)">续费</el-button>
         <el-button link type="info" size="small" @click="modifyPhone(row.id)">修改手机号</el-button>
-        <el-button link type="danger" size="small" @click="detailUser(row.id)">Detail</el-button>
+        <el-button link type="danger" size="small" @click="deleteUser(row.id)">delete</el-button>
       </template>
     </el-table-column>
   </el-table>
-  <el-pagination layout="prev, pager, next" :total="total" @change="handleSizeChange" />
+  <el-pagination layout="prev, pager, next" :default-page-size="15" :total="total" @change="handleSizeChange" />
   <AddMember ref="addUserMemberRef" @on-update="getMemberList" />
 </template>
 
