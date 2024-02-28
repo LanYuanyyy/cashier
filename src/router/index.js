@@ -19,6 +19,7 @@ const router = createRouter({
       children: [
         { path: '/member', name: 'member', component: () => import('../views/member/member.vue') },
         { path: '/orderlist', name: 'orderlist', component: () => import('../views/orderForm/orderList.vue') },
+        { path: '/hire', name: 'hire', component: () => import('../views/hire/hire.vue') },
       ],
     },
   ],

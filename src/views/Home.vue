@@ -13,7 +13,7 @@ const activeIndex = ref('1')
         <el-menu-item index="2-1">出售订单</el-menu-item>
         <el-menu-item index="2-2">出租订单</el-menu-item>
       </el-sub-menu>
-      <el-menu-item index="6">租玩具</el-menu-item>
+      <el-menu-item index="hire">租玩具</el-menu-item>
       <el-menu-item index="7">还玩具</el-menu-item>
     </el-menu>
   </header>
