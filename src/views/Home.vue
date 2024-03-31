@@ -15,6 +15,7 @@ const activeIndex = ref('1')
       </el-sub-menu>
       <el-menu-item index="hire">租玩具</el-menu-item>
       <el-menu-item index="7">还玩具</el-menu-item>
+      <el-menu-item index="mys">我的</el-menu-item>
     </el-menu>
   </header>
   <main>
